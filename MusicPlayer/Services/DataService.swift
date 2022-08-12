@@ -39,7 +39,7 @@ class DataService {
                 var newData: [Song] = [Song]()
                 
                 for song in songData{
-                    song.fileName = "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+                    song.fileName = song.fileName.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
                     if song.artWorkURL != ""{
                         newData.append(song)
                     }

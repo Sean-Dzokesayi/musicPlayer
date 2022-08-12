@@ -18,7 +18,7 @@ class Song: Identifiable, Codable {
     var artist: String?
     var dominantColor: String?
     var duration: Int
-    var fileName: String?
+    var fileName: String
     var genre: String?
     var title: String
     var rgbArray: [Double] {
@@ -36,6 +36,7 @@ class Song: Identifiable, Codable {
 
 class SongModel: ObservableObject{
     
+    static let rootURL = "http://192.168.0.24:8000/"
     @Published private var player = AVPlayer()
     @Published var songs: [Song]
     @Published var nowPlaying: Int = 0
@@ -62,15 +63,20 @@ class SongModel: ObservableObject{
         self.songs[nowPlayingID]
     }
     
+    var songURL: String {
+        SongModel.rootURL + nowPlayingSong.fileName
+    }
+    
     func setupPlayer(){
         
         player.pause()
-        
-        guard let url = URL(string: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3") else {
+        player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
+        guard let url = URL(string: songURL) else {
             self.isSongSetup = false
             return
             
         }
+       print("\n\n\n-----------------\n\(songURL)\n-----------------\n\n\n")
         
         let playerItem = AVPlayerItem(url: url)
         self.player = AVPlayer(playerItem: playerItem)
@@ -110,7 +116,7 @@ class SongModel: ObservableObject{
     }
     
     func previousSong(){
-        if (nowPlaying >= 0) {
+        if (nowPlaying > 0) {
              nowPlaying -= 1
         }else{
             nowPlaying = numSongs - 1
