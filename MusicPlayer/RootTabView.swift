@@ -13,12 +13,9 @@ struct RootTabView: View {
     
     var body: some View {
         
-        let red = songModel.nowPlayingSong.rgbArray[0]
-        let green = songModel.nowPlayingSong.rgbArray[1]
-        let blue = songModel.nowPlayingSong.rgbArray[2]
         
         ZStack {
-            (Color(red: blue / 255, green: green / 255, blue: blue / 255))
+            Color(uiColor: songModel.nowPlayingSong.color)
             VStack{
                 
                 LargeImage(imageURL: songModel.nowPlayingSong.artWorkURL != "" ? songModel.nowPlayingSong.artWorkURL! : "")
