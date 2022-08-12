@@ -49,23 +49,48 @@ class Song: Identifiable, Codable {
 class SongModel: ObservableObject{
     
     static let rootURL = "http://192.168.0.24:8000/"
-    @Published private var player = AVPlayer()
+    @Published var player = AVPlayer()
     @Published var songs: [Song]
     @Published var nowPlaying: Int = 0
     @Published var isPlaying: Bool = false
-    
+    var isSongSetup: Bool = false
+    var timeObserverToken: Any?
     
     init(){
         self.songs = DataService.getSongs()
         self.setupPlayer()
     }
+
+    func addPeriodicTimeObserver() {
+        // Notify every half second
+        let timeScale = CMTimeScale(NSEC_PER_SEC)
+        let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
+
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: time,
+                                                          queue: .main) {
+            [weak self] time in
+            // update player transport UI
+            print("\(time)")
+        }
+    }
+
+    func removePeriodicTimeObserver() {
+        if let timeObserverToken = timeObserverToken {
+            player.removeTimeObserver(timeObserverToken)
+            self.timeObserverToken = nil
+        }
+    }
     
     
-    var isSongSetup: Bool = false
+    
+    
+    
     
     var numSongs: Int {
         self.songs.count
     }
+    
+
     
     var nowPlayingID: Int {
         self.nowPlaying
