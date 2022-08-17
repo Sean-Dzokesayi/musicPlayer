@@ -33,10 +33,6 @@ class Song: Identifiable, Codable {
     }
     
 
-    var color: UIColor {
-        let sp = CGColorSpace(name:CGColorSpace.genericRGBLinear)!
-        let comps : [CGFloat] = [rgbArray[0], rgbArray[1], rgbArray[2], 1]
-
     var color: UIColor{
         let sp = CGColorSpace(name:CGColorSpace.genericRGBLinear)!
         let comps : [CGFloat] = [rgbArray[0] / 255, rgbArray[1] / 255, rgbArray[2] / 255, 1]
@@ -48,11 +44,6 @@ class Song: Identifiable, Codable {
         return color
 
     }
-    
-
-
-    }
-    
     
 
 }
@@ -74,8 +65,7 @@ class SongModel: ObservableObject{
     var isSongSetup: Bool = false
     var timeObserverToken: Any?
     var timeStamp: Float64 = 0
-    var isSongSetup: Bool = false
-    var timeObserverToken: Any?
+
     
     init(){
         self.songs = DataService.getSongs()
