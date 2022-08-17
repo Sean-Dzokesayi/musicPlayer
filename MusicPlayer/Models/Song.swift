@@ -32,16 +32,29 @@ class Song: Identifiable, Codable {
         return doubleArr
     }
     
+
     var color: UIColor {
         let sp = CGColorSpace(name:CGColorSpace.genericRGBLinear)!
         let comps : [CGFloat] = [rgbArray[0], rgbArray[1], rgbArray[2], 1]
+
+    var color: UIColor{
+        let sp = CGColorSpace(name:CGColorSpace.genericRGBLinear)!
+        let comps : [CGFloat] = [rgbArray[0] / 255, rgbArray[1] / 255, rgbArray[2] / 255, 1]
+
         let c = CGColor(colorSpace: sp, components: comps)!
         let sp2 = CGColorSpace(name:CGColorSpace.sRGB)!
         let c2 = c.converted(to: sp2, intent: .relativeColorimetric, options: nil)!
         let color = UIColor(cgColor: c2)
         return color
+
     }
     
+
+
+    }
+    
+    
+
 }
 
 class SongModel: ObservableObject{
@@ -61,12 +74,37 @@ class SongModel: ObservableObject{
     var isSongSetup: Bool = false
     var timeObserverToken: Any?
     var timeStamp: Float64 = 0
+    var isSongSetup: Bool = false
+    var timeObserverToken: Any?
     
     init(){
         self.songs = DataService.getSongs()
         self.setupPlayer()
         addTimeObserver()
     }
+
+    func addPeriodicTimeObserver() {
+        // Notify every half second
+        let timeScale = CMTimeScale(NSEC_PER_SEC)
+        let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
+
+        timeObserverToken = player.addPeriodicTimeObserver(forInterval: time,
+                                                          queue: .main) {
+            [weak self] time in
+            // update player transport UI
+            print("\(time)")
+        }
+    }
+
+    func removePeriodicTimeObserver() {
+        if let timeObserverToken = timeObserverToken {
+            player.removeTimeObserver(timeObserverToken)
+            self.timeObserverToken = nil
+        }
+    }
+    
+    
+    
     
     func searchSong(){
         searchResults.removeAll()
@@ -116,10 +154,13 @@ class SongModel: ObservableObject{
         }
         return "\(minutes):\(seconds)"
     }
+
     
     var numSongs: Int {
         self.songs.count
     }
+    
+
     
     var nowPlayingID: Int {
         self.nowPlaying
