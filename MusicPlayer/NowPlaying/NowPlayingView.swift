@@ -14,6 +14,7 @@ struct NowPlayingView: View {
     var body: some View {
         ZStack {
             Color(uiColor: songModel.nowPlayingSong.color)
+                .ignoresSafeArea()
             VStack{
                 LargeImage(imageURL: songModel.nowPlayingSong.artWorkURL != "" ? songModel.nowPlayingSong.artWorkURL! : "")
                 
