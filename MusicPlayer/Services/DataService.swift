@@ -37,11 +37,15 @@ class DataService {
                 // Store decoded json data in a new variable
                 let songData: [Song] = try decoder.decode([Song].self, from: data)
                 var newData: [Song] = [Song]()
-                
+                var idCounter = 0
                 for song in songData{
                     song.fileName = song.fileName.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
                     if song.artWorkURL != ""{
+                        song.id = idCounter
                         newData.append(song)
+                        idCounter += 1
+                        
+                        
                     }
                 }
                 

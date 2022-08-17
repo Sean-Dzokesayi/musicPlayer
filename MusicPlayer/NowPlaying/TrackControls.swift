@@ -46,7 +46,7 @@ struct TrackControls: View {
                     Image(systemName: "play.fill")
                         .padding(.horizontal)
                         .font(.system(size: 35, weight: .bold))
-                    
+                        .foregroundColor(.gray)
                 }
             }
             
@@ -68,7 +68,8 @@ struct TrackControls: View {
             
             Spacer()
         }
-        .foregroundColor(.gray)
+        .padding(.bottom, 200.0)
+        .padding(.top, 10.0)
 
     }
 }

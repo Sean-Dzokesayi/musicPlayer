@@ -1,13 +1,13 @@
 //
-//  largeImage_np.swift
+//  MiniPlayerImage.swift
 //  MusicPlayer
 //
-//  Created by Sean Dzokesayi on 12/08/2022.
+//  Created by Sean Dzokesayi on 13/08/2022.
 //
 
 import SwiftUI
 
-struct LargeImage: View {
+struct MiniPlayerImage: View {
     
     var imageURL: String
     
@@ -18,15 +18,15 @@ struct LargeImage: View {
             switch phase {
             case .empty:
                 Rectangle()
-                    .frame(minWidth: 350, idealWidth: 350, maxWidth: 350, minHeight: 350, idealHeight: 350, maxHeight: 350, alignment: .center)
+                    .frame(minWidth: 60, idealWidth: 60, maxWidth: 60, minHeight: 60, idealHeight: 60, maxHeight: 60, alignment: .center)
             case .success(let image):
                 image.resizable()
                     .scaledToFill()
-                    .cornerRadius(/*@START_MENU_TOKEN@*/15.0/*@END_MENU_TOKEN@*/)
-                    .frame(minWidth: 350, idealWidth: 350, maxWidth: 350, minHeight: 350, idealHeight: 350, maxHeight: 350, alignment: .center)
+                    .cornerRadius(5.0)
+                    .frame(minWidth: 60, idealWidth: 60, maxWidth: 60, minHeight: 60, idealHeight: 60, maxHeight: 60, alignment: .center)
             case .failure:
                 Rectangle()
-                    .frame(minWidth: 350, idealWidth: 350, maxWidth: 350, minHeight: 350, idealHeight: 350, maxHeight: 350, alignment: .center)
+                    .frame(minWidth: 60, idealWidth: 60, maxWidth: 60, minHeight: 60, idealHeight: 60, maxHeight: 60, alignment: .center)
             @unknown default:
                 // Since the AsyncImagePhase enum isn't frozen,
                 // we need to add this currently unused fallback
@@ -39,8 +39,8 @@ struct LargeImage: View {
     }
 }
 
-struct largeImage_np_Previews: PreviewProvider {
+struct MiniPlayerImage_Previews: PreviewProvider {
     static var previews: some View {
-        LargeImage(imageURL: "https://images.genius.com/f3f77222e1b615e0a10354ea6282ff22.1000x1000x1.png")
+        MiniPlayerImage(imageURL: SongModel().songs[0].artWorkURL!)
     }
 }

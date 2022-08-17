@@ -17,6 +17,12 @@
 		0F5B8B6B28A61B88008C6365 /* LargeImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B8B6A28A61B88008C6365 /* LargeImage.swift */; };
 		0F5B8B6D28A61FD8008C6365 /* TrackControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B8B6C28A61FD8008C6365 /* TrackControls.swift */; };
 		0F5B8B6F28A62065008C6365 /* NowPlayingSongInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5B8B6E28A62065008C6365 /* NowPlayingSongInfo.swift */; };
+		0FB99ED028A733A300DD5852 /* TrackProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99ECF28A733A300DD5852 /* TrackProgress.swift */; };
+		0FB99ED528A7503100DD5852 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99ED428A7503100DD5852 /* SearchView.swift */; };
+		0FB99ED728A750A400DD5852 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99ED628A750A400DD5852 /* NowPlayingView.swift */; };
+		0FB99ED928A7580200DD5852 /* SearchResultImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99ED828A7580200DD5852 /* SearchResultImage.swift */; };
+		0FB99EDC28A75DC900DD5852 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99EDB28A75DC900DD5852 /* MiniPlayerView.swift */; };
+		0FB99EDE28A75E1F00DD5852 /* MiniPlayerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99EDD28A75E1F00DD5852 /* MiniPlayerImage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +38,14 @@
 		0F5B8B6A28A61B88008C6365 /* LargeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeImage.swift; sourceTree = "<group>"; };
 		0F5B8B6C28A61FD8008C6365 /* TrackControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackControls.swift; sourceTree = "<group>"; };
 		0F5B8B6E28A62065008C6365 /* NowPlayingSongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingSongInfo.swift; sourceTree = "<group>"; };
+		0FB99ECF28A733A300DD5852 /* TrackProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackProgress.swift; sourceTree = "<group>"; };
+		0FB99ED128A74AB600DD5852 /* MusicPlayerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicPlayerDebug.entitlements; sourceTree = "<group>"; };
+		0FB99ED228A74AC100DD5852 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0FB99ED428A7503100DD5852 /* SearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
+		0FB99ED628A750A400DD5852 /* NowPlayingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
+		0FB99ED828A7580200DD5852 /* SearchResultImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultImage.swift; sourceTree = "<group>"; };
+		0FB99EDB28A75DC900DD5852 /* MiniPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
+		0FB99EDD28A75E1F00DD5852 /* MiniPlayerImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerImage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +78,10 @@
 		0F5B8B5028A61687008C6365 /* MusicPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				0FB99EDA28A75DB900DD5852 /* MiniPlayer */,
+				0FB99ED328A7501F00DD5852 /* Search */,
+				0FB99ED228A74AC100DD5852 /* Info.plist */,
+				0FB99ED128A74AB600DD5852 /* MusicPlayerDebug.entitlements */,
 				0F5B8B6928A61B59008C6365 /* NowPlaying */,
 				0F5B8B6628A6183F008C6365 /* Services */,
 				0F5B8B6328A6177F008C6365 /* Models */,
@@ -115,8 +133,28 @@
 				0F5B8B6A28A61B88008C6365 /* LargeImage.swift */,
 				0F5B8B6C28A61FD8008C6365 /* TrackControls.swift */,
 				0F5B8B6E28A62065008C6365 /* NowPlayingSongInfo.swift */,
+				0FB99ECF28A733A300DD5852 /* TrackProgress.swift */,
+				0FB99ED628A750A400DD5852 /* NowPlayingView.swift */,
 			);
 			path = NowPlaying;
+			sourceTree = "<group>";
+		};
+		0FB99ED328A7501F00DD5852 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				0FB99ED428A7503100DD5852 /* SearchView.swift */,
+				0FB99ED828A7580200DD5852 /* SearchResultImage.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		0FB99EDA28A75DB900DD5852 /* MiniPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				0FB99EDB28A75DC900DD5852 /* MiniPlayerView.swift */,
+				0FB99EDD28A75E1F00DD5852 /* MiniPlayerImage.swift */,
+			);
+			path = MiniPlayer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,9 +228,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FB99EDC28A75DC900DD5852 /* MiniPlayerView.swift in Sources */,
+				0FB99ED928A7580200DD5852 /* SearchResultImage.swift in Sources */,
+				0FB99ED028A733A300DD5852 /* TrackProgress.swift in Sources */,
+				0FB99ED528A7503100DD5852 /* SearchView.swift in Sources */,
 				0F5B8B6528A6178A008C6365 /* Song.swift in Sources */,
 				0F5B8B5428A61687008C6365 /* RootTabView.swift in Sources */,
+				0FB99ED728A750A400DD5852 /* NowPlayingView.swift in Sources */,
 				0F5B8B5228A61687008C6365 /* MusicPlayerApp.swift in Sources */,
+				0FB99EDE28A75E1F00DD5852 /* MiniPlayerImage.swift in Sources */,
 				0F5B8B6D28A61FD8008C6365 /* TrackControls.swift in Sources */,
 				0F5B8B6828A61858008C6365 /* DataService.swift in Sources */,
 				0F5B8B6F28A62065008C6365 /* NowPlayingSongInfo.swift in Sources */,
@@ -317,14 +361,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = MusicPlayer/MusicPlayer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MusicPlayer/MusicPlayerDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MusicPlayer/Preview Content\"";
 				DEVELOPMENT_TEAM = T875D922KG;
 				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MusicPlayer/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -361,8 +407,10 @@
 				DEVELOPMENT_ASSET_PATHS = "\"MusicPlayer/Preview Content\"";
 				DEVELOPMENT_TEAM = T875D922KG;
 				ENABLE_HARDENED_RUNTIME = YES;
+				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MusicPlayer/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
