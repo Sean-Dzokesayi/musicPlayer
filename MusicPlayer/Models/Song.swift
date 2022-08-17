@@ -35,7 +35,7 @@ class Song: Identifiable, Codable {
 
     var color: UIColor{
         let sp = CGColorSpace(name:CGColorSpace.genericRGBLinear)!
-        let comps : [CGFloat] = [rgbArray[0] / 255, rgbArray[1] / 255, rgbArray[2] / 255, 1]
+        let comps : [CGFloat] = [rgbArray[0], rgbArray[1], rgbArray[2], 1]
 
         let c = CGColor(colorSpace: sp, components: comps)!
         let sp2 = CGColorSpace(name:CGColorSpace.sRGB)!

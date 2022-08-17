@@ -13,15 +13,16 @@ counter = 0
 
 for i in data:
     if(counter % 100 == 0):
-        sleep(5)
+        sleep(1)
     print("----------------------------------------")
     print(str(counter) + ": " + i["title"])     
     try:
         song = genius.search_song(i["title"], i["artist"])
+        
     except:
         print("An eror occured")
 
-    lyrics[counter] = song
+    lyrics[counter] = song.lyrics
     counter += 1
     print("----------------------------------------")
     print("----------------------------------------\n\n")
