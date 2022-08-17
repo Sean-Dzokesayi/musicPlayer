@@ -16,9 +16,11 @@ struct NowPlayingSongInfo: View {
             VStack(alignment: .leading){
                 // Song name
                 Text(nowPlaying.title)
+                    .font(.title2)
                 
                 if nowPlaying.artist != nil {
                     Text(nowPlaying.artist!)
+                        .font(.title3)
                 }
                 
             }

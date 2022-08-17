@@ -9,10 +9,17 @@ import SwiftUI
 
 struct RootTabView: View {
     
+    @State var songModel = SongModel()
+    
     @ObservedObject var songModel = SongModel()
     var body: some View {
     
         
+        NavigationView {
+            VStack{
+                
+                SearchView(songModel: songModel)
+                    
         ZStack{
             Color(uiColor: songModel.nowPlayingSong.color)
             VStack{
@@ -57,11 +64,10 @@ struct RootTabView: View {
             .padding(.top, 150.0)
 
             
-        }.ignoresSafeArea()
-        
-        
-        
-        
+            }
+      
+        }
+      
         
     }
 }
