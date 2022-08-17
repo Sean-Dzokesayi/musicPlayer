@@ -18,11 +18,11 @@ for i in data:
     print(str(counter) + ": " + i["title"])     
     try:
         song = genius.search_song(i["title"], i["artist"])
-        
+        lyrics[counter] = song.lyrics
     except:
         print("An eror occured")
 
-    lyrics[counter] = song.lyrics
+    
     counter += 1
     print("----------------------------------------")
     print("----------------------------------------\n\n")
