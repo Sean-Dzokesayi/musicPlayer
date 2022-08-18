@@ -13,14 +13,15 @@ import AVKit
 class Song: Identifiable, Codable {
     
     var id: Int
-    var album: String?
+    var album: String
     var artWorkURL: String?
-    var artist: String?
+    var artist: String
     var dominantColor: String?
     var duration: Int
     var fileName: String
     var genre: String?
     var title: String
+    var lyrics: String?
     var rgbArray: [Double] {
         let stringArr = dominantColor?.components(separatedBy: ",")
         var doubleArr: [Double] = [Double]()
@@ -56,11 +57,15 @@ class SongModel: ObservableObject{
     var nowPlaying: Int = 0
     @Published var isPlaying: Bool = false
     @Published var currentPlayerTime: Double = 0
+    @Published var searchType: String = "Songs"
     
     // Search page vars
     @Published var searchText: String = ""
-    @Published var searchResults: [Song] = [Song]()
-    //@Published var selectedSongId: Int!
+    @Published var searchResultSongs: [Song] = [Song]()
+    @Published var searchResultArtists: [Song] = [Song]()
+    @Published var searchResultAlbums: [Song] = [Song]()
+    @Published var results: [Song] = [Song]()
+    
     
     var isSongSetup: Bool = false
     var timeObserverToken: Any?
@@ -93,16 +98,54 @@ class SongModel: ObservableObject{
         }
     }
     
+    func searchTypeChangeToArtists(){
+        searchType = "Artists"
+        updateResults()
+    }
+    
+    func searchTypeChangeToSongs(){
+        searchType = "Songs"
+        updateResults()
+    }
+    
+    func searchTypeChangeToAlbums(){
+        searchType = "Albums"
+        updateResults()
+    }
+    
+    func updateResults(){
+        results = [Song]()
+        if(searchType == "Songs"){
+            results = searchResultSongs
+        }
+        if(searchType == "Artists"){
+            results = searchResultArtists
+        }
+        if(searchType == "Albums"){
+            results = searchResultAlbums
+        }
+    }
+    
     
     
     
     func searchSong(){
-        searchResults.removeAll()
+        
+        searchResultSongs.removeAll()
+        searchResultArtists.removeAll()
+        searchResultAlbums.removeAll()
         for song in songs{
             if song.title.lowercased().contains(searchText.lowercased()){
-                searchResults.append(song)
+                searchResultSongs.append(song)
+            }
+            if ((song.album.lowercased().contains(searchText.lowercased()))){
+                searchResultAlbums.append(song)
+            }
+            if ((song.artist.lowercased().contains(searchText.lowercased()))){
+                searchResultArtists.append(song)
             }
         }
+        updateResults()
     }
     
     func selectedSong(selectedSongId id: Int){

@@ -23,6 +23,7 @@ struct TrackProgress: View {
                 value: $songModel.currentPlayerTime,
                     in: 0...Double(songDuration)
                 )
+            .foregroundColor(.gray)
             HStack{
                 Text("\(SongModel.formatTime(seconds:  Int(songModel.currentPlayerTime)))")
                 Spacer()

@@ -17,7 +17,6 @@ struct MiniPlayerView: View {
             Color(uiColor: songModel.nowPlayingSong.color)
                 HStack{
                     
-                    
                     NavigationLink {
                         NowPlayingView(songModel: songModel)
                             .ignoresSafeArea()

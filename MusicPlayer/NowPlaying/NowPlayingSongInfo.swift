@@ -18,10 +18,9 @@ struct NowPlayingSongInfo: View {
                 Text(nowPlaying.title)
                     .font(.title2)
                 
-                if nowPlaying.artist != nil {
-                    Text(nowPlaying.artist!)
-                        .font(.title3)
-                }
+                Text(nowPlaying.artist)
+                    .font(.title3)
+              
                 
             }
             .padding()
@@ -31,6 +30,7 @@ struct NowPlayingSongInfo: View {
             
         }
         .padding(.bottom)
+        .navigationTitle("Now Playing")
     }
 }
 

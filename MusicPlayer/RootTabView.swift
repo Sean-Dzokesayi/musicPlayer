@@ -13,12 +13,13 @@ struct RootTabView: View {
     
     var body: some View {
         
-        
-        NavigationView {
+        NavigationStack{
             SearchView(songModel: songModel)
-               
             
         }
+           
+        .background(Color(uiColor: songModel.nowPlayingSong.color)
+)
         
     }
 }

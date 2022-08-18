@@ -10,7 +10,7 @@ import SwiftUI
 struct SearchView: View {
     
     @ObservedObject var songModel: SongModel
-    
+                                                            
     var body: some View {
         
         VStack{
@@ -21,46 +21,29 @@ struct SearchView: View {
                 }
                 .font(.title3)
     
-            
-            ScrollView{
-                ForEach(songModel.searchResults){ song in
-                    HStack{
-                        Button {
-                            songModel.selectedSong(selectedSongId: song.id)
-                        } label: {
-                            Group{
-                                HStack{
-                                    SearchResultImage(imageURL: song.artWorkURL ?? "")
-                                    
-                                    VStack(alignment: .leading, spacing: 5){
-                                        Text("\(song.title)")
-                                            .font(.title2)
-                                            .fontWeight(Font.Weight.medium)
-                                        if song.artist != nil{
-                                            Text(song.artist!)
-                                                .font(.title3)
-                                        }
-                                        
-                                    }.foregroundColor(.black)
-                                        
-                                }
-                            }
-                        }
-                        
-                        
-                        Spacer()
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "ellipsis")
-                        }
-                        
-                    }
-                    
-                    
+            HStack(spacing: 15){
+                Button {
+                    songModel.searchTypeChangeToSongs()
+                } label: {
+                    Text("Songs")
                 }
-                .background(Color(uiColor: songModel.nowPlayingSong.color)).ignoresSafeArea()
+                
+                Button {
+                    songModel.searchTypeChangeToArtists()
+                } label: {
+                    Text("Artists")
+                }
+                
+                Button {
+                    songModel.searchTypeChangeToAlbums()
+                } label: {
+                    Text("Albums")
+                }
+
             }
+            
+            
+            ResultList(songModel: songModel)
             
             
             
@@ -76,9 +59,8 @@ struct SearchView: View {
             .padding(.top, 30.0)
             .padding(.bottom, 0)
             .ignoresSafeArea()
-        
-        
             .background(Color(uiColor: songModel.nowPlayingSong.color))
+//            .navigationTitle("Search")
         
         
     }
@@ -89,5 +71,48 @@ struct SearchView: View {
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView(songModel: SongModel())
+    }
+}
+
+struct ResultList: View {
+    
+    @ObservedObject var songModel: SongModel
+    
+    var body: some View {
+        
+        ScrollView{
+            ForEach(songModel.results){ song in
+                HStack{
+                    Button {
+                        songModel.selectedSong(selectedSongId: song.id)
+                    } label: {
+                        Group{
+                            HStack{
+                                SearchResultImage(imageURL: song.artWorkURL ?? "")
+                                
+                                VStack(alignment: .leading, spacing: 5){
+                                    Text("\(song.title)")
+                                        .font(.title2)
+                                        .fontWeight(Font.Weight.medium)
+                                }.foregroundColor(.black)
+                                
+                            }
+                        }
+                    }
+                    
+                    
+                    Spacer()
+                    Button {
+                        
+                    } label: {
+                        Image(systemName: "ellipsis")
+                    }
+                    
+                }
+                
+                
+            }
+            .background(Color(uiColor: songModel.nowPlayingSong.color)).ignoresSafeArea()
+        }
     }
 }

@@ -36,6 +36,7 @@ struct TrackControls: View {
                     Image(systemName: "pause.fill")
                         .padding(.horizontal)
                         .font(.system(size: 35, weight: .bold))
+                        .foregroundColor(.gray)
                     
                 }
             }else{
@@ -68,7 +69,7 @@ struct TrackControls: View {
             
             Spacer()
         }
-        .padding(.bottom, 200.0)
+        .padding(.bottom, 25.0)
         .padding(.top, 10.0)
 
     }
