@@ -58,7 +58,14 @@ class Song: Identifiable, Codable {
         var doubleArr: [Double] = [Double]()
         
         for s in stringArr!{
-            doubleArr.append(Double(s)! / 255)
+            if s == "null" || s == ""{
+                doubleArr.append(133 / 255)
+                doubleArr.append(49 / 255)
+                doubleArr.append(38 / 255)
+            }else{
+                doubleArr.append(Double(s)! / 255)
+            }
+           
         }
         
         return doubleArr
@@ -127,21 +134,21 @@ class SongModel: ObservableObject{
                         return
                     }
                 
-                    let title = dict["title"] as! String
-                    let artist = dict["artist"] as! String
-                    let artWorkURL = dict["artWorkURL"] as! String
-                    let album = dict["album"] as! String
-                    let dominantColor = dict["dominantColor"] as! String
-                    let duration = dict["duration"] as! Int
-                    let fileName = dict["fileName"] as! String
-                    let genre = dict["genre"] as! String
-                    let id = dict["id"] as! Int
-                    let lyrics = (dict["lyrics"] != nil) ? (dict["lyrics"] as! String) : ""
+                let title: String! = dict["title"] as? String
+                let artist: String! = dict["artist"] as? String
+                    let artWorkURL: String! = dict["artWorkURL"] as? String
+                var album: String! = dict["album"] as? String
+                let dominantColor: String! = dict["dominantColor"] as? String
+                let duration: Int? = dict["duration"] as? Int
+                    let fileName: String! = dict["fileName"] as? String
+                    let genre: String! = dict["genre"] as? String
+                let id: Int = dict["trackID"] as! Int
+                    let lyrics: String = (dict["lyrics"] != nil) ? (dict["lyrics"] as! String) : ""
 //                    let trackTotal = dict["trackTotal"] as! String
 //                    let year = dict["year"] as! String
                     print("id: \(id) ... title: \(title)")
-                self.songs.append(Song(id: id, album: album, artWorkURL: artWorkURL, artist: artist, dominantColor: dominantColor, duration: duration, fileName: fileName, genre: genre, title: title, lyrics: lyrics))
-                fetchedSongData.append(Song(id: id, album: album, artWorkURL: artWorkURL, artist: artist, dominantColor: dominantColor, duration: duration, fileName: fileName, genre: genre, title: title, lyrics: lyrics))
+                self.songs.append(Song(id: id, album: album ?? "", artWorkURL: artWorkURL, artist: artist, dominantColor: dominantColor, duration: duration ?? 0, fileName: fileName, genre: genre, title: title, lyrics: lyrics))
+                fetchedSongData.append(Song(id: id, album: album ?? "", artWorkURL: artWorkURL, artist: artist, dominantColor: dominantColor, duration: duration ?? 0, fileName: fileName, genre: genre, title: title, lyrics: lyrics))
                 self.songs = fetchedSongData
                 }
         }
