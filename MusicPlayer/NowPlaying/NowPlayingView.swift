@@ -20,7 +20,6 @@ struct NowPlayingView: View {
                 Spacer()
                 LargeImage(imageURL: songModel.nowPlayingSong.artWorkURL != "" ? songModel.nowPlayingSong.artWorkURL! : "")
                     
-                Spacer()
                 NowPlayingSongInfo(nowPlaying: songModel.nowPlayingSong)
                 
                 TrackProgress(songModel: songModel )

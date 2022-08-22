@@ -15,7 +15,6 @@ struct RootTabView: View {
         
         NavigationStack{
             SearchView(songModel: songModel)
-            
         }
            
         .background(Color(uiColor: songModel.nowPlayingSong.color)

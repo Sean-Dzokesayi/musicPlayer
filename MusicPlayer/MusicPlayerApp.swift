@@ -6,9 +6,17 @@
 //
 
 import SwiftUI
+import Firebase
+
 
 @main
 struct MusicPlayerApp: App {
+    
+    init(){
+        FirebaseApp.configure()
+        
+    }
+    
     var body: some Scene {
         WindowGroup {
             RootTabView()
