@@ -14,6 +14,7 @@ struct NowPlayingView: View {
     
     var body: some View {
         ZStack {
+            
             Color(uiColor: songModel.nowPlayingSong.color)
                 .ignoresSafeArea()
             VStack{
@@ -25,7 +26,6 @@ struct NowPlayingView: View {
                 TrackProgress(songModel: songModel )
                     .padding()
                 //,trackProgress: $songModel.currentPlayerTime
-                
                 
                 
                 // Track Controls

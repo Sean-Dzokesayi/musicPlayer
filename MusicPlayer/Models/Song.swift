@@ -11,6 +11,7 @@ import AVKit
 import FirebaseDatabase
 import FirebaseSharedSwift
 import FirebaseStorage
+import MediaPlayer
 
 extension DispatchQueue {
 
@@ -110,7 +111,7 @@ class SongModel: ObservableObject{
     @Published var searchResultArtists: [Song] = [Song]()
     @Published var searchResultAlbums: [Song] = [Song]()
     @Published var results: [Song] = [Song]()
-    
+  
     
     var isSongSetup: Bool = false
     var timeObserverToken: Any?
@@ -123,6 +124,14 @@ class SongModel: ObservableObject{
         self.setupPlayer()
         self.addTimeObserver()
         
+        var audioSession = AVAudioSession.sharedInstance()
+        
+        do{
+            try audioSession.setCategory(.playback)
+        }
+        catch{
+            
+        }
     }
     
     func getSongs(){
@@ -137,7 +146,7 @@ class SongModel: ObservableObject{
                 let title: String! = dict["title"] as? String
                 let artist: String! = dict["artist"] as? String
                     let artWorkURL: String! = dict["artWorkURL"] as? String
-                var album: String! = dict["album"] as? String
+                let album: String! = dict["album"] as? String
                 let dominantColor: String! = dict["dominantColor"] as? String
                 let duration: Int? = dict["duration"] as? Int
                     let fileName: String! = dict["fileName"] as? String
@@ -291,46 +300,62 @@ class SongModel: ObservableObject{
     
     var songURL: String {
         nowPlayingSong.fileName
+        
+        
     }
     
+    var controlCenterSongURL: URL {
+        let gsReference = Storage.storage().reference(forURL: "gs://jukebox_songs/Music/\(songURL)")
+        var link: URL?
+        gsReference.downloadURL { url, error in
+          if let error = error {
+            // Handle any errors
+            
+              print(error)
+          } else {
+              // Get the download URL for gsReference
+              link = url!
+          }
+                              
+          }
+        return link! ?? URL(string: "")!
+
+    }
     func setupPlayer(){
 
         player.pause()
         currentPlayerTime = 0
         
+        
         // Create a reference to the file you want to download
         let gsReference = Storage.storage().reference(forURL: "gs://jukebox_songs/Music/\(songURL)")
-print(gsReference)
+        print(gsReference)
         // Fetch the download URL
         gsReference.downloadURL { url, error in
           if let error = error {
             // Handle any errors
               print(error)
           } else {
-            // Get the download URL for gsReference
-              self.player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
+              // Get the download URL for gsReference
               
               print("\nURL is: \(url)\n")
-
+              
               let playerItem = AVPlayerItem(url: url!)
               self.player = AVPlayer(playerItem: playerItem)
               //self.player.rate = 1.0;
               self.isSongSetup = true
               self.addTimeObserver()
+              self.player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
+              
+          }
+            
                   
               if(self.isPlaying) { self.player.play() }
           }
         }
-            
-        
-        
-        
-        
-        
-    }
     
     func playSong(){
-        if isSongSetup && !isPlaying{
+        if !isPlaying{
             player.play()
             isPlaying = true
             return
@@ -340,7 +365,7 @@ print(gsReference)
     }
     
     func pauseSong(){
-        if isSongSetup && isPlaying{
+        if isPlaying{
             player.pause()
             isPlaying = false
             return
@@ -358,6 +383,16 @@ print(gsReference)
         print("Now playing \(nowPlaying)")
         setupPlayer()
         print("Done setting up player")
+        
+        
+        
+        
+         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
+         var nowPlayingInfo = [String: Any]()
+         nowPlayingInfo[MPMediaItemPropertyTitle] = "metadata.title"
+         nowPlayingInfo[MPMediaItemPropertyArtist] = "metadata.artist"
+         
+        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
     
     func previousSong(){

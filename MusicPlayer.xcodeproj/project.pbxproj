@@ -21,6 +21,11 @@
 		0F9457A828B3D28900D82884 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 0F9457A728B3D28900D82884 /* FirebaseStorage */; };
 		0F9457AA28B3D28900D82884 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 0F9457A928B3D28900D82884 /* FirebaseStorageCombine-Community */; };
 		0F9457AC28B3E0E300D82884 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0F9457AB28B3E0E300D82884 /* GoogleService-Info.plist */; };
+		0F9457AE28B5113E00D82884 /* NowPlayableBehaviour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9457AD28B5113E00D82884 /* NowPlayableBehaviour.swift */; };
+		0F9457B628B5121500D82884 /* NowPlayableMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9457B228B5121500D82884 /* NowPlayableMetadata.swift */; };
+		0F9457B728B5121500D82884 /* NowPlayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9457B328B5121500D82884 /* NowPlayable.swift */; };
+		0F9457B828B5121500D82884 /* NowPlayableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9457B428B5121500D82884 /* NowPlayableError.swift */; };
+		0F9457B928B5121500D82884 /* NowPlayableCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F9457B528B5121500D82884 /* NowPlayableCommand.swift */; };
 		0F96DEA928ACF4F50021F9BE /* LyricsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F96DEA828ACF4F50021F9BE /* LyricsView.swift */; };
 		0FB99ED028A733A300DD5852 /* TrackProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99ECF28A733A300DD5852 /* TrackProgress.swift */; };
 		0FB99ED528A7503100DD5852 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FB99ED428A7503100DD5852 /* SearchView.swift */; };
@@ -43,6 +48,11 @@
 		0F5B8B6C28A61FD8008C6365 /* TrackControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackControls.swift; sourceTree = "<group>"; };
 		0F5B8B6E28A62065008C6365 /* NowPlayingSongInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingSongInfo.swift; sourceTree = "<group>"; };
 		0F9457AB28B3E0E300D82884 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		0F9457AD28B5113E00D82884 /* NowPlayableBehaviour.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayableBehaviour.swift; sourceTree = "<group>"; };
+		0F9457B228B5121500D82884 /* NowPlayableMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayableMetadata.swift; sourceTree = "<group>"; };
+		0F9457B328B5121500D82884 /* NowPlayable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayable.swift; sourceTree = "<group>"; };
+		0F9457B428B5121500D82884 /* NowPlayableError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayableError.swift; sourceTree = "<group>"; };
+		0F9457B528B5121500D82884 /* NowPlayableCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayableCommand.swift; sourceTree = "<group>"; };
 		0F96DEA828ACF4F50021F9BE /* LyricsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsView.swift; sourceTree = "<group>"; };
 		0FB99ECF28A733A300DD5852 /* TrackProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackProgress.swift; sourceTree = "<group>"; };
 		0FB99ED128A74AB600DD5852 /* MusicPlayerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MusicPlayerDebug.entitlements; sourceTree = "<group>"; };
@@ -88,6 +98,8 @@
 		0F5B8B5028A61687008C6365 /* MusicPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				0F9457B128B5121500D82884 /* NowPlayable */,
+				0F9457AD28B5113E00D82884 /* NowPlayableBehaviour.swift */,
 				0F9457AB28B3E0E300D82884 /* GoogleService-Info.plist */,
 				0FB99EDA28A75DB900DD5852 /* MiniPlayer */,
 				0FB99ED328A7501F00DD5852 /* Search */,
@@ -148,6 +160,17 @@
 				0F96DEA828ACF4F50021F9BE /* LyricsView.swift */,
 			);
 			path = NowPlaying;
+			sourceTree = "<group>";
+		};
+		0F9457B128B5121500D82884 /* NowPlayable */ = {
+			isa = PBXGroup;
+			children = (
+				0F9457B228B5121500D82884 /* NowPlayableMetadata.swift */,
+				0F9457B328B5121500D82884 /* NowPlayable.swift */,
+				0F9457B428B5121500D82884 /* NowPlayableError.swift */,
+				0F9457B528B5121500D82884 /* NowPlayableCommand.swift */,
+			);
+			path = NowPlayable;
 			sourceTree = "<group>";
 		};
 		0FB99ED328A7501F00DD5852 /* Search */ = {
@@ -250,13 +273,18 @@
 			files = (
 				0FB99EDC28A75DC900DD5852 /* MiniPlayerView.swift in Sources */,
 				0FB99ED928A7580200DD5852 /* SearchResultImage.swift in Sources */,
+				0F9457B728B5121500D82884 /* NowPlayable.swift in Sources */,
+				0F9457AE28B5113E00D82884 /* NowPlayableBehaviour.swift in Sources */,
+				0F9457B628B5121500D82884 /* NowPlayableMetadata.swift in Sources */,
 				0FB99ED028A733A300DD5852 /* TrackProgress.swift in Sources */,
 				0FB99ED528A7503100DD5852 /* SearchView.swift in Sources */,
+				0F9457B828B5121500D82884 /* NowPlayableError.swift in Sources */,
 				0F5B8B6528A6178A008C6365 /* Song.swift in Sources */,
 				0F5B8B5428A61687008C6365 /* RootTabView.swift in Sources */,
 				0FB99ED728A750A400DD5852 /* NowPlayingView.swift in Sources */,
 				0F5B8B5228A61687008C6365 /* MusicPlayerApp.swift in Sources */,
 				0FB99EDE28A75E1F00DD5852 /* MiniPlayerImage.swift in Sources */,
+				0F9457B928B5121500D82884 /* NowPlayableCommand.swift in Sources */,
 				0F5B8B6D28A61FD8008C6365 /* TrackControls.swift in Sources */,
 				0F5B8B6828A61858008C6365 /* DataService.swift in Sources */,
 				0F5B8B6F28A62065008C6365 /* NowPlayingSongInfo.swift in Sources */,
@@ -400,8 +428,8 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
@@ -440,8 +468,8 @@
 				"INFOPLIST_KEY_UILaunchScreen_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphoneos*]" = UIStatusBarStyleDefault;
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
