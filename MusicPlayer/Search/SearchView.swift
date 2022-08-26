@@ -13,53 +13,54 @@ struct SearchView: View {
                                                             
     var body: some View {
         
-        VStack{
-            TextField("Search for title", text: $songModel.searchText)
-                .padding()
-                .onSubmit {
-                    songModel.searchSong()
-                }
-                .font(.title3)
-    
-            HStack(spacing: 15){
-                Button {
-                    songModel.searchTypeChangeToSongs()
-                } label: {
-                    Text("Songs")
-                }
-                
-                Button {
-                    songModel.searchTypeChangeToArtists()
-                } label: {
-                    Text("Artists")
-                }
-                
-                Button {
-                    songModel.searchTypeChangeToAlbums()
-                } label: {
-                    Text("Albums")
-                }
+        NavigationStack {
+            VStack{
+                TextField("Search for title", text: $songModel.searchText)
+                    .padding()
+                    .onSubmit {
+                        songModel.searchSong()
+                    }
+                    .font(.title3)
+        
+                HStack(spacing: 15){
+                    Button {
+                        songModel.searchTypeChangeToSongs()
+                    } label: {
+                        Text("Songs")
+                    }
+                    
+                    Button {
+                        songModel.searchTypeChangeToArtists()
+                    } label: {
+                        Text("Artists")
+                    }
+                    
+                    Button {
+                        songModel.searchTypeChangeToAlbums()
+                    } label: {
+                        Text("Albums")
+                    }
+                    Button {
+                        songModel.searchTypeChangeToAlbums()
+                    } label: {
+                        Text("Genre")
+                    }
 
+                }
+                
+                
+                ResultList(songModel: songModel)
+
+                 MiniPlayerView(songModel: songModel, isSongPlaying: $songModel.isPlaying)
+        
+                
+                
             }
-            
-            
-            ResultList(songModel: songModel)
-            
-            
-            
-            
-            
-            Spacer()
-            MiniPlayerView(songModel: songModel, isSongPlaying: $songModel.isPlaying)
-                .padding([.leading, .bottom, .trailing], 1.0)
-            
-            
-        }
-            .padding()
-            .padding(.top, 30.0)
-            .padding(.bottom, 0)
-            .ignoresSafeArea()
+                .padding()
+                .padding(.top, 30.0)
+                .padding(.bottom, 0)
             .background(Color(uiColor: songModel.nowPlayingSong.color))
+        }
 //            .navigationTitle("Search")
         
         
@@ -84,7 +85,7 @@ struct ResultList: View {
             ForEach(songModel.results){ song in
                 HStack{
                     Button {
-                        songModel.selectedSong(selectedSongId: song.id)
+                        songModel.selectedSong(selectedSong: song.id)
                     } label: {
                         Group{
                             HStack{

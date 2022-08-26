@@ -12,11 +12,14 @@ struct RootTabView: View {
     @State var songModel = SongModel()
     
     var body: some View {
-        
-        NavigationStack{
-            SearchView(songModel: songModel)
-        }
-           
+            TabView{
+                SearchView(songModel: songModel)
+                    .tabItem {
+                        Image(systemName: "magnifyingglass")
+                        Text("Search")
+                    }
+                    
+            }
         .background(Color(uiColor: songModel.nowPlayingSong.color)
 )
         

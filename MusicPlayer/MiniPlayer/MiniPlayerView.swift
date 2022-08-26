@@ -18,10 +18,9 @@ struct MiniPlayerView: View {
                 HStack{
                     
                     NavigationLink {
-                        NowPlayingView(songModel: songModel)
-                            .ignoresSafeArea()
-                    } label: {
+                        NowPlayingView(songModel: songModel)                    } label: {
                         HStack{
+//                            Text("\(songModel.nowPlayingID)")
                             MiniPlayerImage(imageURL: songModel.nowPlayingSong.artWorkURL!)
                             Text(songModel.nowPlayingSong.title)
                                 .font(.title3)
@@ -54,7 +53,7 @@ struct MiniPlayerView: View {
                     }
                     
                 }
-        }.ignoresSafeArea()
+        }
         .foregroundColor(.black)
         .frame(maxHeight: 75)
         .cornerRadius(15)

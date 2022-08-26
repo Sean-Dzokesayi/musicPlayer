@@ -13,8 +13,64 @@ import FirebaseSharedSwift
 import FirebaseStorage
 import MediaPlayer
 
-extension DispatchQueue {
 
+struct PlayerInfo: Decodable, Encodable {
+    var nowPlaying: Int
+}
+
+class UserSessionManager
+{
+    // MARK:- Properties
+
+    public static var shared = UserSessionManager()
+
+    var playerItemURLS: [URL]
+    {
+        get
+        {
+            guard let data = UserDefaults.standard.data(forKey: "playerItemURLS") else { return [] }
+            return (try? JSONDecoder().decode([URL].self, from: data)) ?? []
+        }
+        set
+        {
+            guard let data = try? JSONEncoder().encode(newValue) else { return }
+            UserDefaults.standard.set(data, forKey: "playerItemURLS")
+        }
+    }
+    
+    var playerInfo: PlayerInfo
+    {
+        get{
+            guard let data = UserDefaults.standard.data(forKey: "playerInfo") else { return PlayerInfo(nowPlaying: 0) }
+            return (try? JSONDecoder().decode(PlayerInfo.self, from: data)) ?? PlayerInfo(nowPlaying: 0)
+        }
+        set
+        {
+            guard let data = try? JSONEncoder().encode(newValue) else { return }
+            UserDefaults.standard.set(data, forKey: "playerInfo")
+        }
+    }
+
+    var songs: [Song]
+    {
+        get
+        {
+            guard let data = UserDefaults.standard.data(forKey: "songs") else { return [] }
+            return (try? JSONDecoder().decode([Song].self, from: data)) ?? []
+        }
+        set
+        {
+            guard let data = try? JSONEncoder().encode(newValue) else { return }
+            UserDefaults.standard.set(data, forKey: "songs")
+        }
+    }
+
+    // MARK:- Init
+
+    private init(){}
+}
+extension DispatchQueue {
+    
     static func background(delay: Double = 0.0, background: (()->Void)? = nil, completion: (() -> Void)? = nil) {
         DispatchQueue.global(qos: .background).async {
             background?()
@@ -25,13 +81,24 @@ extension DispatchQueue {
             }
         }
     }
-
+    
 }
 
-class Song: Identifiable, Codable {
+class Song: Identifiable, Codable, Equatable {
     
+    static func == (lhs: Song, rhs: Song) -> Bool {
+        
+
+        if (lhs.title == rhs.title &&
+            lhs.artist == rhs.artist &&
+            lhs.duration == rhs.duration){
+            return true
+        }
+        
+        return false
+    }
     
-    init(id: Int, album: String, artWorkURL: String?, artist: String, dominantColor: String?, duration: Int, fileName: String, genre: String?, title: String, lyrics: String?) {
+    init(id: Int, album: String, artWorkURL: String?, artist: String, dominantColor: String?, duration: Int, fileName: String, genre: String, title: String, lyrics: String?) {
         self.id = id
         self.album = album
         self.artWorkURL = artWorkURL
@@ -51,7 +118,7 @@ class Song: Identifiable, Codable {
     var dominantColor: String?
     var duration: Int
     var fileName: String
-    var genre: String?
+    var genre: String
     var title: String
     var lyrics: String?
     var rgbArray: [Double] {
@@ -66,29 +133,29 @@ class Song: Identifiable, Codable {
             }else{
                 doubleArr.append(Double(s)! / 255)
             }
-           
+            
         }
         
         return doubleArr
     }
     
-
+    
     var color: UIColor{
         let sp = CGColorSpace(name:CGColorSpace.genericRGBLinear)!
         let comps : [CGFloat] = [rgbArray[0], rgbArray[1], rgbArray[2], 1]
-
+        
         let c = CGColor(colorSpace: sp, components: comps)!
         let sp2 = CGColorSpace(name:CGColorSpace.sRGB)!
         let c2 = c.converted(to: sp2, intent: .relativeColorimetric, options: nil)!
         let color = UIColor(cgColor: c2)
         return color
-
+        
     }
     
-
-
     
-
+    
+    
+    
 }
 
 class SongModel: ObservableObject{
@@ -97,10 +164,10 @@ class SongModel: ObservableObject{
     
     static let rootURL = "https://firebasestorage.googleapis.com/v0/b/jukebox_songs/o/Music%2F01%20-%"
     static let urlEnd = "?alt=media&token=597efc5e-e63a-49af-bc02-73c8b98d1463"
-    @Published var player = AVPlayer()
+    @Published var player = AVQueuePlayer()
     
     @Published var songs: [Song] = [Song]()
-    var nowPlaying: Int = 0
+    var nowPlaying: Int = -1
     @Published var isPlaying: Bool = false
     @Published var currentPlayerTime: Double = 0
     @Published var searchType: String = "Songs"
@@ -110,77 +177,157 @@ class SongModel: ObservableObject{
     @Published var searchResultSongs: [Song] = [Song]()
     @Published var searchResultArtists: [Song] = [Song]()
     @Published var searchResultAlbums: [Song] = [Song]()
+    @Published var searchResultGenres: [Song] = [Song]()
+    var playerItems: [URL] = [URL]()
+    
     @Published var results: [Song] = [Song]()
-  
+    
     
     var isSongSetup: Bool = false
     var timeObserverToken: Any?
     var timeStamp: Float64 = 0
-
+    var fetchedSongData = [Song]()
+    
+    
+    
     
     init(){
-        songs.append(Song(id: 0, album: "", artWorkURL: "", artist: "", dominantColor: "255,255,255", duration: 0, fileName: "", genre: "", title: "", lyrics: ""))
-        getSongs()
-        self.setupPlayer()
-        self.addTimeObserver()
+     
+        player.actionAtItemEnd = .advance
         
-        var audioSession = AVAudioSession.sharedInstance()
+        self.songs = UserSessionManager.shared.songs
+        self.playerItems = UserSessionManager.shared.playerItemURLS
+        self.nowPlaying = UserSessionManager.shared.playerInfo.nowPlaying
         
-        do{
-            try audioSession.setCategory(.playback)
+//        UserSessionManager.shared.songs = [Song]()
+//        UserSessionManager.shared.playerItemURLS = [URL]()
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            if self.songs.count < 10 {
+                print("Here now")
+                self.getSongs()
+                self.songs = self.fetchedSongData
+            }
+
+            self.setupPlayer()
+            print("Player ready")
+            
+            DispatchQueue.main.async {
+                
+                if self.songs.count == 0 {
+                    self.songs.append(Song(id: 0, album: "", artWorkURL: "", artist: "", dominantColor: "255,255,255", duration: 0, fileName: "", genre: "", title: "--------", lyrics: ""))
+                }
+                
+                self.setupPlayer()
+                self.addTimeObserver()
+                
+                let audioSession = AVAudioSession.sharedInstance()
+                
+                do{
+                    try audioSession.setCategory(.playback)
+                }
+                catch{
+                    
+                }
+                
+            }
         }
-        catch{
+    }
+    
+    
+    
+    //MARK: GetSongs()
+    func getSongs(){
+       
+        var songID = 0
+        self.ref.observeSingleEvent(of: .value){snapshot in
+            for case let child as DataSnapshot in snapshot.children {
+                guard let dict = child.value as? [String:Any] else {
+                    print("Error")
+                    return
+                }
+                
+                
+                let title: String! = dict["title"] as? String
+                let artist: String! = dict["artist"] as? String
+                let artWorkURL: String! = dict["artWorkURL"] as? String
+                let album: String! = dict["album"] as? String
+                let dominantColor: String! = dict["dominantColor"] as? String
+                let duration: Int? = dict["duration"] as? Int
+                let fileName: String! = dict["fileName"] as? String
+                let genre: String! = dict["genre"] as? String
+                let lyrics: String = (dict["lyrics"] != nil) ? (dict["lyrics"] as! String) : ""
+                
+                // Create a reference to the file you want to download
+                let gsReference = Storage.storage().reference(forURL: "gs://jukebox_songs/Music/\(fileName!)")
+                
+                // Fetch the download URL
+                gsReference.downloadURL { url, error in
+                    if let error = error {
+                        // Handle any errors
+                        print(error)
+                        print("\n\nThis song was not added: \(fileName)\n\n")
+                    } else {
+                        // Get the download URL for gsReference
+                        //                        let playerItem = AVPlayerItem(url: url!)
+                        self.playerItems.append(url!)
+                        //                  print("\nURL is: \(url)\n")
+                        print(self.playerItems.count)
+                        
+                        
+                        self.fetchedSongData.append(Song(id: songID, album: album ?? "", artWorkURL: artWorkURL, artist: artist, dominantColor: dominantColor, duration: duration ?? 0, fileName: fileName, genre: genre ?? "", title: title, lyrics: lyrics))
+                        self.songs = self.fetchedSongData
+                        
+                        
+                        songID += 1
+                        
+                        
+                        if self.songs.count == 1{
+                            self.setupPlayer()
+                        }
+                        
+                        UserSessionManager.shared.songs = self.songs
+                        UserSessionManager.shared.playerItemURLS = self.playerItems
+                        
+                    }
+                    
+                }
+                
+            }
+            
             
         }
     }
     
-    func getSongs(){
-        var fetchedSongData = [Song]()
-        self.ref.observeSingleEvent(of: .value){snapshot in
-            for case let child as DataSnapshot in snapshot.children {
-                guard let dict = child.value as? [String:Any] else {
-                        print("Error")
-                        return
-                    }
-                
-                let title: String! = dict["title"] as? String
-                let artist: String! = dict["artist"] as? String
-                    let artWorkURL: String! = dict["artWorkURL"] as? String
-                let album: String! = dict["album"] as? String
-                let dominantColor: String! = dict["dominantColor"] as? String
-                let duration: Int? = dict["duration"] as? Int
-                    let fileName: String! = dict["fileName"] as? String
-                    let genre: String! = dict["genre"] as? String
-                let id: Int = dict["trackID"] as! Int
-                    let lyrics: String = (dict["lyrics"] != nil) ? (dict["lyrics"] as! String) : ""
-//                    let trackTotal = dict["trackTotal"] as! String
-//                    let year = dict["year"] as! String
-                    print("id: \(id) ... title: \(title)")
-                self.songs.append(Song(id: id, album: album ?? "", artWorkURL: artWorkURL, artist: artist, dominantColor: dominantColor, duration: duration ?? 0, fileName: fileName, genre: genre, title: title, lyrics: lyrics))
-                fetchedSongData.append(Song(id: id, album: album ?? "", artWorkURL: artWorkURL, artist: artist, dominantColor: dominantColor, duration: duration ?? 0, fileName: fileName, genre: genre, title: title, lyrics: lyrics))
-                self.songs = fetchedSongData
-                }
-        }
-        self.songs = fetchedSongData
-        setupPlayer()
-     
-}
     
-
-
+    
     func addPeriodicTimeObserver() {
         // Notify every half second
         let timeScale = CMTimeScale(NSEC_PER_SEC)
         let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
-
+        
         timeObserverToken = player.addPeriodicTimeObserver(forInterval: time,
-                                                          queue: .main) {
+                                                           queue: .main) {
             [weak self] time in
             // update player transport UI
+            
+            
+            
             print("\(time)")
+            self?.checkIfNextSong()
+            
         }
     }
-
+    
+    func checkIfNextSong(){
+        if Int(currentPlayerTime) == nowPlayingSong.duration {
+            nextSong()
+            print("Found next song")
+        }
+        print("Not yet next song")
+    }
+    
     func removePeriodicTimeObserver() {
         if let timeObserverToken = timeObserverToken {
             player.removeTimeObserver(timeObserverToken)
@@ -202,6 +349,10 @@ class SongModel: ObservableObject{
         searchType = "Albums"
         updateResults()
     }
+    func searchTypeChangeToGenre(){
+        searchType = "Genre"
+        updateResults()
+    }
     
     func updateResults(){
         results = [Song]()
@@ -213,6 +364,9 @@ class SongModel: ObservableObject{
         }
         if(searchType == "Albums"){
             results = searchResultAlbums
+        }
+        if(searchType == "Genre"){
+            results = searchResultGenres
         }
     }
     
@@ -234,11 +388,15 @@ class SongModel: ObservableObject{
             if ((song.artist.lowercased().contains(searchText.lowercased()))){
                 searchResultArtists.append(song)
             }
+            if ((song.genre.lowercased().contains(searchText.lowercased()))){
+                searchResultGenres.append(song)
+            }
         }
         updateResults()
     }
     
-    func selectedSong(selectedSongId id: Int){
+    func selectedSong(selectedSong id: Int){
+        
         nowPlaying = id
         setupPlayer()
     }
@@ -277,13 +435,13 @@ class SongModel: ObservableObject{
         }
         return "\(minutes):\(seconds)"
     }
-
+    
     
     var numSongs: Int {
         self.songs.count
     }
     
-
+    
     
     var nowPlayingID: Int {
         self.nowPlaying
@@ -295,7 +453,7 @@ class SongModel: ObservableObject{
         }else{
             return Song(id: 0, album: "", artWorkURL: "", artist: "", dominantColor: "255,255,255", duration: 0, fileName: "", genre: "", title: "", lyrics: "")
         }
-
+        
     }
     
     var songURL: String {
@@ -304,55 +462,25 @@ class SongModel: ObservableObject{
         
     }
     
-    var controlCenterSongURL: URL {
-        let gsReference = Storage.storage().reference(forURL: "gs://jukebox_songs/Music/\(songURL)")
-        var link: URL?
-        gsReference.downloadURL { url, error in
-          if let error = error {
-            // Handle any errors
-            
-              print(error)
-          } else {
-              // Get the download URL for gsReference
-              link = url!
-          }
-                              
-          }
-        return link! ?? URL(string: "")!
-
-    }
+    // MARK: Setup Player ()
     func setupPlayer(){
-
+        
         player.pause()
         currentPlayerTime = 0
         
-        
-        // Create a reference to the file you want to download
-        let gsReference = Storage.storage().reference(forURL: "gs://jukebox_songs/Music/\(songURL)")
-        print(gsReference)
-        // Fetch the download URL
-        gsReference.downloadURL { url, error in
-          if let error = error {
-            // Handle any errors
-              print(error)
-          } else {
-              // Get the download URL for gsReference
-              
-              print("\nURL is: \(url)\n")
-              
-              let playerItem = AVPlayerItem(url: url!)
-              self.player = AVPlayer(playerItem: playerItem)
-              //self.player.rate = 1.0;
-              self.isSongSetup = true
-              self.addTimeObserver()
-              self.player.audiovisualBackgroundPlaybackPolicy = .continuesIfPossible
-              
-          }
-            
-                  
-              if(self.isPlaying) { self.player.play() }
-          }
+        if playerItems.count != 0{
+            player.removeAllItems()
+            let playerItem = AVPlayerItem(url: playerItems[nowPlayingID])
+            self.player.insert(playerItem, after: nil)
+            self.isSongSetup = true
+            self.addTimeObserver()
+            if(self.isPlaying) { self.player.play() }
         }
+        
+        UserSessionManager.shared.playerInfo.nowPlaying = nowPlayingID
+        
+        
+    }
     
     func playSong(){
         if !isPlaying{
@@ -360,8 +488,6 @@ class SongModel: ObservableObject{
             isPlaying = true
             return
         }
-        setupPlayer()
-        
     }
     
     func pauseSong(){
@@ -370,7 +496,6 @@ class SongModel: ObservableObject{
             isPlaying = false
             return
         }
-        setupPlayer()
     }
     
     func nextSong(){
@@ -380,19 +505,9 @@ class SongModel: ObservableObject{
         }else{
             nowPlaying = 0
         }
-        print("Now playing \(nowPlaying)")
+//        player.advanceToNextItem()
         setupPlayer()
-        print("Done setting up player")
         
-        
-        
-        
-         let nowPlayingInfoCenter = MPNowPlayingInfoCenter.default()
-         var nowPlayingInfo = [String: Any]()
-         nowPlayingInfo[MPMediaItemPropertyTitle] = "metadata.title"
-         nowPlayingInfo[MPMediaItemPropertyArtist] = "metadata.artist"
-         
-        nowPlayingInfoCenter.nowPlayingInfo = nowPlayingInfo
     }
     
     func previousSong(){
@@ -401,6 +516,7 @@ class SongModel: ObservableObject{
         }else{
             nowPlaying = numSongs - 1
         }
+        
         setupPlayer()
     }
     
